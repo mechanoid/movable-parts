@@ -15,6 +15,9 @@ const ANIMATION_DURATION = 30000
 
 let start
 
+// just a stupid implementation to move around things.
+// NOTE: The interesting part is the use of requestAnimationFrame,
+//       to leverage the underlying browser animation slots.
 const updateElementPositions = (elements, boundary = {}) => {
   const step = (timestamp) => {
     if (start === undefined) { start = timestamp }
@@ -32,7 +35,7 @@ const updateElementPositions = (elements, boundary = {}) => {
       element.style.transform = `translate(${newX}px, ${newY}px)`
     })
 
-    if (elapsed < ANIMATION_DURATION) { // Stop the animation after 2 seconds
+    if (elapsed < ANIMATION_DURATION) { // Stop the animation after ANIMATION_DURATION milliseconds
       window.requestAnimationFrame(step)
     }
   }
@@ -47,7 +50,7 @@ class MovableParts extends HTMLElement {
 
     this.elements = []
     for (let i = 0; i < OBJECT_COUNT; i++) {
-      this.elements.push(this.appendElement({ fill: '#acacac', width: '25', height: '25', x: 10 + i * 2, y: 10 + i * 2 }))
+      this.elements.push(this.appendElement({ fill: i % 2 === 0 ? '#acacac' : 'red', width: '25', height: '25', x: 10 + i * 2, y: 10 + i * 2 }))
     }
 
     window.requestAnimationFrame(updateElementPositions(this.elements, boundary))
